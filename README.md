@@ -65,7 +65,7 @@ BusTicketBookingSystem/
 │   ├── Ticket.cs             # Ticket booking and reservation system
 │   └── Invoice.cs            # Invoice generation and payment processing
 │
-└── README.md                 # Project documentation
+
 ```
 
 ### 📊 Class Dependency Diagram
