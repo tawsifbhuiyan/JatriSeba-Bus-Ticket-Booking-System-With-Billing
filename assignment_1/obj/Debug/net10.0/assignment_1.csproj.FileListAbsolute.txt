@@ -1,0 +1,14 @@
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\bin\Debug\net10.0\assignment_1.exe
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\bin\Debug\net10.0\assignment_1.deps.json
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\bin\Debug\net10.0\assignment_1.runtimeconfig.json
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\bin\Debug\net10.0\assignment_1.dll
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\bin\Debug\net10.0\assignment_1.pdb
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\assignment_1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\assignment_1.AssemblyInfoInputs.cache
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\assignment_1.AssemblyInfo.cs
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\assignment_1.csproj.CoreCompileInputs.cache
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\assignment_1.dll
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\refint\assignment_1.dll
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\assignment_1.pdb
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\assignment_1.genruntimeconfig.cache
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\ref\assignment_1.dll
