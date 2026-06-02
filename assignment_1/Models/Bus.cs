@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BusTicketBookingSystem
 {
-    // ============ INTERFACES (Interface Segregation & Dependency Inversion) ============
+    // ============ Shob INTERFACES (Interface Segregation & Dependency Inversion) ============
     
    
     public interface ISeatManageable
