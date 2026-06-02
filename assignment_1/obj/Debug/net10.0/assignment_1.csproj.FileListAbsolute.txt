@@ -12,3 +12,4 @@ C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\
 C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\assignment_1.pdb
 C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\assignment_1.genruntimeconfig.cache
 C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\ref\assignment_1.dll
+C:\Users\User\Documents\assignments\assignment_1\assignment_1\obj\Debug\net10.0\assignment_1.sourcelink.json
