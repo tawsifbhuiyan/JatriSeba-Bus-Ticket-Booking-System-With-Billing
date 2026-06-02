@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BusTicketBookingSystem
 {
-    // INTERFACE SEGREGATION PRINCIPLE (ISP) - Focused interface for schedule info
+    // INTERFACE SEGREGATION PRINCIPLE (ISP) - Focused interface Schedule info er jonno
     public interface IScheduleInfo
     {
         string ScheduleId { get; }
@@ -14,7 +14,7 @@ namespace BusTicketBookingSystem
         decimal TicketPrice { get; }
     }
 
-    // INTERFACE SEGREGATION PRINCIPLE (ISP) - Focused interface for schedule operations
+    // INTERFACE SEGREGATION PRINCIPLE (ISP) - Focused interface schedule operations er jonno
     public interface IScheduleOperations
     {
         bool IsAvailable();
@@ -29,8 +29,8 @@ namespace BusTicketBookingSystem
         void DisplayScheduleDetails();
     }
 
-    // ABSTRACTION - Abstract base class hiding implementation details
-    // OPEN/CLOSED PRINCIPLE (OCP) - Open for extension, closed for modification
+    // ABSTRACTION - Abstract base class implementation details hide kore, common functionality provide kore
+    // OPEN/CLOSED PRINCIPLE (OCP) - Extension er jonno open, modification er jonno closed
     public abstract class BaseSchedule : IScheduleInfo, IScheduleOperations, IScheduleDisplay
     {
         // ENCAPSULATION - Private fields
@@ -40,38 +40,38 @@ namespace BusTicketBookingSystem
         private DateTime _departureDateTime;
         private decimal _ticketPrice;
         private BaseBus _assignedBus;  // ENCAPSULATION - Association with bus
-        private HashSet<string> _bookedSeats;  // ENCAPSULATION - Track seats for this schedule
+        private HashSet<string>_bookedSeats;  // ENCAPSULATION - Track seats for this schedule
 
         protected BaseSchedule(string scheduleId, string departureCity, string arrivalCity, 
                                DateTime departureDateTime, decimal ticketPrice, BaseBus assignedBus)
         {
-            ScheduleId = scheduleId;
-            DepartureCity = departureCity;
-            ArrivalCity = arrivalCity;
-            DepartureDateTime = departureDateTime;
-            TicketPrice = ticketPrice;
-            _assignedBus = assignedBus;
-            _bookedSeats = new HashSet<string>();
+            ScheduleId=scheduleId;
+            DepartureCity=departureCity;
+            ArrivalCity=arrivalCity;
+            DepartureDateTime=departureDateTime;
+            TicketPrice=ticketPrice;
+            _assignedBus=assignedBus;
+            _bookedSeats=new HashSet<string>();
         }
 
         // ENCAPSULATION - Public properties with validation
         public string ScheduleId 
         { 
-            get => _scheduleId;
+            get=>_scheduleId;
             private set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if(string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Schedule ID cannot be empty");
-                _scheduleId = value;
+                _scheduleId=value;
             }
         }
 
         public string DepartureCity
         {
-            get => _departureCity;
+            get=>_departureCity;
             private set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if(string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Departure city cannot be empty");
                 _departureCity = value;
             }
@@ -82,87 +82,86 @@ namespace BusTicketBookingSystem
             get => _arrivalCity;
             private set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if(string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Arrival city cannot be empty");
-                _arrivalCity = value;
+                _arrivalCity=value;
             }
         }
 
         public DateTime DepartureDateTime
         {
-            get => _departureDateTime;
+            get=>_departureDateTime;
             private set
             {
-                if (value < DateTime.Now)
+                if(value<DateTime.Now)
                     throw new ArgumentException("Departure date cannot be in the past");
-                _departureDateTime = value;
+                _departureDateTime=value;
             }
         }
 
         public decimal TicketPrice
         {
-            get => _ticketPrice;
+            get=>_ticketPrice;
             private set
             {
-                if (value <= 0)
+                if (value<=0)
                     throw new ArgumentException("Ticket price must be greater than 0");
-                _ticketPrice = value;
+                _ticketPrice=value;
             }
         }
 
-        // ENCAPSULATION - Association with bus (requirement: every schedule associated with a bus)
-        public BaseBus AssignedBus => _assignedBus;
+        // ENCAPSULATION - Association with bus (requirement chilo, but direct access na diye method er maddhome control rakha)
+        public BaseBus AssignedBus=>_assignedBus;
 
-        public IReadOnlySet<string> BookedSeats => _bookedSeats;
-        public int BookedSeatsCount => _bookedSeats.Count;
-        public int AvailableSeatsCount => _assignedBus.AvailableSeatsCount - _bookedSeats.Count;
-        public bool IsFullyBooked => AvailableSeatsCount <= 0;
+        public IReadOnlySet<string> BookedSeats=>_bookedSeats;
+        public int BookedSeatsCount=>_bookedSeats.Count;
+        public int AvailableSeatsCount=>_assignedBus.AvailableSeatsCount - _bookedSeats.Count;
+        public bool IsFullyBooked=>AvailableSeatsCount<= 0;
 
-        // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Method only checks availability
+        // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Method shudhu schedule availability check kore, departure status o booking status consider kore
         public bool IsAvailable()
         {
-            return !IsDeparturePassed() && !IsFullyBooked;
+            return !IsDeparturePassed()&&!IsFullyBooked;
         }
 
-        // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Method only checks departure status
+        // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Method only check kore if departure time has passed, booking status consider kore na
         public bool IsDeparturePassed()
         {
-            return DateTime.Now > _departureDateTime;
+            return DateTime.Now>_departureDateTime;
         }
 
-        // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Method only calculates time remaining
+        // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Method only calculate kore time until departure, booking status consider kore na
         public TimeSpan GetTimeUntilDeparture()
         {
             if (IsDeparturePassed())
                 return TimeSpan.Zero;
-            return _departureDateTime - DateTime.Now;
+            return _departureDateTime-DateTime.Now;
         }
 
         // POLYMORPHISM - Virtual method can be overridden by derived classes
         public virtual decimal GetDiscountedPrice(decimal discountPercentage)
         {
-            if (discountPercentage < 0 || discountPercentage > 100)
+            if (discountPercentage<0||discountPercentage>100)
                 throw new ArgumentException("Discount must be between 0 and 100");
             
-            decimal finalPrice = _ticketPrice * (1 - discountPercentage / 100);
+            decimal finalPrice=_ticketPrice*(1-discountPercentage/100);
             
             // Apply bus class multiplier (POLYMORPHISM - uses bus's pricing strategy)
-            finalPrice *= _assignedBus.GetBasePriceMultiplier();
-            
+             finalPrice*=_assignedBus.GetBasePriceMultiplier();
             return Math.Round(finalPrice, 2);
         }
 
-        // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Method only handles seat booking
+        // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Method only seat booking kore
         public bool BookSeat(int seatNumber, string userId)
         {
             
-            if (seatNumber < 1 || seatNumber > _assignedBus.TotalCapacity)
+            if (seatNumber<1||seatNumber>_assignedBus.TotalCapacity)
             {
                 Console.WriteLine($" Invalid seat number. Must be between 1 and {_assignedBus.TotalCapacity}");
                 return false;
             }
 
-            string seatKey = $"{seatNumber}:{userId}";
+            string seatKey=$"{seatNumber}:{userId}";
             
             
             if (_bookedSeats.Contains(seatKey))
@@ -189,10 +188,10 @@ namespace BusTicketBookingSystem
             return false;
         }
 
-        // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Method only cancels seat booking
+        // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Method only seat booking cancellation kore
         public bool CancelSeatBooking(int seatNumber, string userId)
         {
-            string seatKey = $"{seatNumber}:{userId}";
+            string seatKey=$"{seatNumber}:{userId}";
             
             if (!_bookedSeats.Contains(seatKey))
             {
@@ -207,7 +206,7 @@ namespace BusTicketBookingSystem
             return true;
         }
 
-        // POLYMORPHISM - Virtual method for display
+        // POLYMORPHISM - Virtual method display er jonno
         public virtual void DisplayScheduleDetails()
         {
             string status = IsAvailable() ? "AVAILABLE" : (IsDeparturePassed() ? "DEPARTED" : "FULLY BOOKED");
@@ -249,7 +248,7 @@ namespace BusTicketBookingSystem
         // POLYMORPHISM - Overriding with regular schedule specific behavior
         public override decimal GetDiscountedPrice(decimal discountPercentage)
         {
-            decimal price = base.GetDiscountedPrice(discountPercentage);
+            decimal price=base.GetDiscountedPrice(discountPercentage);
             Console.WriteLine($" Regular schedule discount applied: {discountPercentage}% off");
             return price;
         }
@@ -270,13 +269,13 @@ namespace BusTicketBookingSystem
         public override decimal GetDiscountedPrice(decimal discountPercentage)
         {
            
-            if (discountPercentage > 10)
+            if (discountPercentage>10)
             {
                 Console.WriteLine($" Express schedule discount limited to 10% (requested: {discountPercentage}%)");
-                discountPercentage = 10;
+                discountPercentage=10;
             }
             
-            decimal price = base.GetDiscountedPrice(discountPercentage);
+            decimal price=base.GetDiscountedPrice(discountPercentage);
             Console.WriteLine($" Express schedule: {discountPercentage}% discount applied");
             return price;
         }
@@ -298,7 +297,7 @@ namespace BusTicketBookingSystem
         {
             return scheduleType.ToLower() switch
             {
-                "express" => new ExpressSchedule(scheduleId, departureCity, arrivalCity, 
+                "express"=>new ExpressSchedule(scheduleId, departureCity, arrivalCity, 
                                                   departureDateTime, ticketPrice, assignedBus),
                 _ => new RegularSchedule(scheduleId, departureCity, arrivalCity, 
                                          departureDateTime, ticketPrice, assignedBus)

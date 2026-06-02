@@ -14,8 +14,8 @@ namespace BusTicketBookingSystem
         bool IsSeatAvailable(int seatNumber);
         int AvailableSeatsCount { get; }
         int ReservedSeatsCount { get; }
-        IReadOnlySet<int> GetAvailableSeats();
-        IReadOnlySet<int> GetReservedSeats();
+        IReadOnlySet<int>GetAvailableSeats();
+        IReadOnlySet<int>GetReservedSeats();
     }
     
    
@@ -46,51 +46,51 @@ namespace BusTicketBookingSystem
     
         public abstract class BaseBus : ISeatManageable, IBusInfo, IPricingStrategy, IDisplayable
     {
-        // Protected fields - available to derived classes (Encapsulation)
+        // Protected fields - derived classes e access korte pare (Encapsulation)
         protected string _busId;
         protected string _coachNumber;
         protected BusClassification _classification;
         protected int _totalCapacity;
-        protected HashSet<int> _reservedSeats;
-        protected HashSet<int> _availableSeats;
+        protected HashSet<int>_reservedSeats;
+        protected HashSet<int>_availableSeats;
         
         
         protected BaseBus(string busId, string coachNumber, BusClassification classification)
         {
-            _busId = busId;
-            _coachNumber = coachNumber;
-            _classification = classification;
-            _totalCapacity = GetCapacityByClassification(classification);
-            _reservedSeats = new HashSet<int>();
-            _availableSeats = new HashSet<int>();
+            _busId=busId;
+            _coachNumber=coachNumber;
+            _classification=classification;
+            _totalCapacity=GetCapacityByClassification(classification);
+            _reservedSeats=new HashSet<int>();
+            _availableSeats=new HashSet<int>();
             InitializeAvailableSeats();
         }
         
-        // Abstract method - forces derived classes to implement (Abstraction)
+        // Abstract method - derived classes ke implement korte hobe (Abstraction)
         protected abstract int GetCapacityByClassification(BusClassification classification);
         
-        // Virtual method - can be overridden by derived classes (Polymorphism)
+        // Virtual method - override korte pare (Polymorphism)
         protected virtual void InitializeAvailableSeats()
         {
-            for (int i = 1; i <= _totalCapacity; i++)
+            for (int i=1;i<=_totalCapacity;i++)
             {
                 _availableSeats.Add(i);
             }
         }
         
         // Interface implementations
-        public string BusId => _busId;
-        public string CoachNumber => _coachNumber;
-        public BusClassification Classification => _classification;
-        public int TotalCapacity => _totalCapacity;
+        public string BusId=>_busId;
+        public string CoachNumber=>_coachNumber;
+        public BusClassification Classification=>_classification;
+        public int TotalCapacity=>_totalCapacity;
         
-        public int AvailableSeatsCount => _availableSeats.Count;
-        public int ReservedSeatsCount => _reservedSeats.Count;
+        public int AvailableSeatsCount=>_availableSeats.Count;
+        public int ReservedSeatsCount=>_reservedSeats.Count;
         
-        // Virtual method - can be overridden (Polymorphism)
+        // Virtual method - override korte pare (Polymorphism)
         public virtual bool ReserveSeat(int seatNumber)
         {
-            if (seatNumber < 1 || seatNumber > _totalCapacity)
+            if (seatNumber<1 || seatNumber>_totalCapacity)
             {
                 Console.WriteLine($" Seat {seatNumber} invalid. Range: 1-{_totalCapacity}");
                 return false;
@@ -115,7 +115,7 @@ namespace BusTicketBookingSystem
             return true;
         }
         
-        // Virtual method - can be overridden (Polymorphism)
+        // Virtual method - override korte pare (Polymorphism)
         public virtual bool CancelReservation(int seatNumber)
         {
             if (!_reservedSeats.Contains(seatNumber))
@@ -133,32 +133,32 @@ namespace BusTicketBookingSystem
         
         public bool IsSeatAvailable(int seatNumber)
         {
-            return seatNumber >= 1 && seatNumber <= _totalCapacity && _availableSeats.Contains(seatNumber);
+            return seatNumber>=1&&seatNumber<=_totalCapacity&&_availableSeats.Contains(seatNumber);
         }
         
-        public IReadOnlySet<int> GetAvailableSeats() => _availableSeats;
-        public IReadOnlySet<int> GetReservedSeats() => _reservedSeats;
+        public IReadOnlySet<int> GetAvailableSeats()=>_availableSeats;
+        public IReadOnlySet<int> GetReservedSeats()=>_reservedSeats;
         
-        // Abstract method for pricing - forces implementation (Abstraction)
+        // Abstract method pricing er jonno - derived classes ke implement korte hobe (Abstraction)
         public abstract decimal GetBasePriceMultiplier();
         
-        // Virtual method for seat pricing - can be overridden
+        // Virtual method seat price er jonno - override korte pare (Polymorphism)
         public virtual decimal GetSeatPrice(decimal baseFare, int seatNumber)
         {
-            decimal multiplier = GetBasePriceMultiplier();
-            decimal seatMultiplier = GetSeatPositionMultiplier(seatNumber);
-            return baseFare * multiplier * seatMultiplier;
+            decimal multiplier=GetBasePriceMultiplier();
+            decimal seatMultiplier=GetSeatPositionMultiplier(seatNumber);
+            return baseFare*multiplier*seatMultiplier;
         }
         
         protected virtual decimal GetSeatPositionMultiplier(int seatNumber)
         {
             
-            int seatsPerRow = 4;
-            int positionInRow = ((seatNumber - 1) % seatsPerRow) + 1;
+            int seatsPerRow=4;
+            int positionInRow = ((seatNumber-1) %seatsPerRow)+1;
             return (positionInRow == 1 || positionInRow == seatsPerRow) ? 1.1m : 1.0m;
         }
         
-        // Virtual display methods - can be overridden
+        // Virtual display methods - override korte pare (Polymorphism)
         public virtual string GetBusInfo()
         {
             return $"Bus ID: {_busId}\n" +
@@ -191,23 +191,23 @@ namespace BusTicketBookingSystem
             
             Console.WriteLine("\nLegend: [A] Available  [R] Reserved\n");
             
-            int seatsPerRow = 4;
-            for (int i = 1; i <= _totalCapacity; i++)
+            int seatsPerRow=4;
+            for (int i=1;i<=_totalCapacity;i++)
             {
                 if (_reservedSeats.Contains(i))
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor=ConsoleColor.Red;
                     Console.Write($" S{i,2}[R] ");
                     Console.ResetColor();
                 }
                 else if (_availableSeats.Contains(i))
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.ForegroundColor=ConsoleColor.Green;
                     Console.Write($" S{i,2}[A] ");
                     Console.ResetColor();
                 }
                 
-                if (i % seatsPerRow == 0)
+                if (i % seatsPerRow==0)
                     Console.WriteLine();
             }
             Console.WriteLine();
@@ -234,7 +234,7 @@ namespace BusTicketBookingSystem
             return 50; // Economy: 50 seats
         }
         
-        public override string GetBusType() => "Economy";
+        public override string GetBusType()=>"Economy";
         
         public override decimal GetBasePriceMultiplier()
         {
@@ -244,8 +244,8 @@ namespace BusTicketBookingSystem
     
        public class BusinessBus : BaseBus
     {
-        private bool _hasWiFi = true;
-        private bool _hasChargingPorts = true;
+        private bool _hasWiFi=true;
+        private bool _hasChargingPorts=true;
         
         public BusinessBus(string busId, string coachNumber) 
             : base(busId, coachNumber, BusClassification.Business)
@@ -257,7 +257,7 @@ namespace BusTicketBookingSystem
             return 35; 
         }
         
-        public override string GetBusType() => "Business";
+        public override string GetBusType()=>"Business";
         
         public override decimal GetBasePriceMultiplier()
         {
@@ -268,9 +268,9 @@ namespace BusTicketBookingSystem
         protected override decimal GetSeatPositionMultiplier(int seatNumber)
         {
             
-            int seatsPerRow = 3; 
-            int positionInRow = ((seatNumber - 1) % seatsPerRow) + 1;
-            return (positionInRow == 1 || positionInRow == seatsPerRow) ? 1.05m : 1.0m;
+            int seatsPerRow=3; 
+            int positionInRow=((seatNumber - 1) % seatsPerRow) + 1;
+            return (positionInRow==1||positionInRow==seatsPerRow) ? 1.05m : 1.0m;
         }
         
         public override string GetBusInfo()
@@ -288,12 +288,12 @@ namespace BusTicketBookingSystem
    
     public class LuxuryBus : BaseBus
     {
-        private List<string> _amenities;
+        private List<string>_amenities;
         
         public LuxuryBus(string busId, string coachNumber) 
             : base(busId, coachNumber, BusClassification.Luxury)
         {
-            _amenities = new List<string> 
+            _amenities=new List<string> 
             { 
                 "WiFi", "Charging Ports", "Reclining Seats", 
                 "Entertainment System", "Refreshments", "AC", "Reading Lights"
@@ -321,7 +321,7 @@ namespace BusTicketBookingSystem
         public override bool ReserveSeat(int seatNumber)
         {
             // Additional luxury-specific logic
-            bool result = base.ReserveSeat(seatNumber);
+            bool result=base.ReserveSeat(seatNumber);
             if (result)
             {
                 Console.WriteLine($" Luxury perk: Complimentary snack included for seat {seatNumber}");

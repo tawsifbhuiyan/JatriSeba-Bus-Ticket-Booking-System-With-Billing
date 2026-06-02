@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BusTicketBookingSystem
 {
-    // INTERFACE SEGREGATION PRINCIPLE (ISP) - Focused interface for invoice data
+    // INTERFACE SEGREGATION PRINCIPLE (ISP) - Focused interface invoice data er presentation
     public interface IInvoiceInfo
     {
         string InvoiceId { get; }
@@ -15,7 +15,7 @@ namespace BusTicketBookingSystem
         PaymentStatus Status { get; }
     }
 
-    // INTERFACE SEGREGATION PRINCIPLE (ISP) - Focused interface for invoice operations
+    // INTERFACE SEGREGATION PRINCIPLE (ISP) again - Focused interface for invoice operations
     public interface IInvoiceOperations
     {
         void MarkAsPaid();
@@ -30,7 +30,7 @@ namespace BusTicketBookingSystem
         PartiallyPaid
     }
 
-    // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Only responsible for invoice data
+    // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Shudhu invoice data and operations handle kore
     // ENCAPSULATION - All fields are private with public properties
     public class Invoice : IInvoiceInfo, IInvoiceOperations
     {
@@ -43,79 +43,79 @@ namespace BusTicketBookingSystem
 
         public Invoice(string invoiceId, string ticketId, string userId, decimal amountDue)
         {
-            InvoiceId = invoiceId;
-            TicketId = ticketId;
-            UserId = userId;
-            AmountDue = amountDue;
-            _generationDate = DateTime.Now;
-            _status = PaymentStatus.Unpaid;
+            InvoiceId=invoiceId;
+            TicketId=ticketId;
+            UserId=userId;
+            AmountDue=amountDue;
+            _generationDate=DateTime.Now;
+            _status=PaymentStatus.Unpaid;
         }
 
         public string InvoiceId
         {
-            get => _invoiceId;
+            get=>_invoiceId;
             private set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if(string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Invoice ID cannot be empty");
-                _invoiceId = value;
+                _invoiceId=value;
             }
         }
 
         public string TicketId
         {
-            get => _ticketId;
+            get=>_ticketId;
             private set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if(string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Ticket ID cannot be empty");
-                _ticketId = value;
+                _ticketId=value;
             }
         }
 
         public string UserId
         {
-            get => _userId;
+            get=>_userId;
             private set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if(string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("User ID cannot be empty");
-                _userId = value;
+                _userId=value;
             }
         }
 
         public decimal AmountDue
         {
-            get => _amountDue;
+            get=>_amountDue;
             private set
             {
-                if (value <= 0)
+                if(value<=0)
                     throw new ArgumentException("Amount due must be greater than 0");
-                _amountDue = value;
+                _amountDue=value;
             }
         }
 
-        public DateTime GenerationDate => _generationDate;
-        public PaymentStatus Status => _status;
+        public DateTime GenerationDate=>_generationDate;
+        public PaymentStatus Status=>_status;
 
         public void MarkAsPaid()
         {
-            _status = PaymentStatus.Paid;
+            _status=PaymentStatus.Paid;
         }
 
         public void MarkAsPartiallyPaid(decimal amountPaid)
         {
-            if (amountPaid > 0 && amountPaid < _amountDue)
+            if (amountPaid>0&&amountPaid<_amountDue)
             {
-                _status = PaymentStatus.PartiallyPaid;
-                _amountDue -= amountPaid;
+                _status=PaymentStatus.PartiallyPaid;
+                _amountDue-=amountPaid;
             }
         }
 
         public void DisplayInvoice()
         {
-            string statusText = _status == PaymentStatus.Paid ? "PAID" : (_status == PaymentStatus.PartiallyPaid ? "PARTIALLY PAID" : "UNPAID");
-            ConsoleColor statusColor = _status == PaymentStatus.Paid ? ConsoleColor.Green : ConsoleColor.Red;
+            string statusText=_status==PaymentStatus.Paid ? "PAID" : (_status == PaymentStatus.PartiallyPaid ? "PARTIALLY PAID" : "UNPAID");
+            ConsoleColor statusColor= _status==PaymentStatus.Paid ? ConsoleColor.Green : ConsoleColor.Red;
             
             Console.WriteLine($"\n-------------------------------------------");
             Console.WriteLine($"INVOICE DETAILS");
@@ -149,8 +149,8 @@ namespace BusTicketBookingSystem
         bool MakeFullPayment(string invoiceId);
     }
 
-    // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Only handles invoice and payment processing
-    // DEPENDENCY INVERSION PRINCIPLE (DIP) - Depends on abstractions
+    // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Shudhu invoice generation, retrieval, and payment handling kore
+    // DEPENDENCY INVERSION PRINCIPLE (DIP) - Abstraction er upor depend kore, na je concrete implementation er upor
     public class PaymentService : IPaymentService
     {
         private Dictionary<string, Invoice> _invoices;
@@ -160,16 +160,16 @@ namespace BusTicketBookingSystem
 
         public PaymentService()
         {
-            _invoices = new Dictionary<string, Invoice>();
-            _userInvoices = new Dictionary<string, List<string>>();
-            _ticketToInvoice = new Dictionary<string, string>();
-            _nextInvoiceNumber = 1;
+            _invoices=new Dictionary<string, Invoice>();
+            _userInvoices=new Dictionary<string, List<string>>();
+            _ticketToInvoice=new Dictionary<string, string>();
+            _nextInvoiceNumber=1;
         }
 
         // REQUIREMENT: Every confirmed ticket booking must automatically generate an invoice
         public Invoice GenerateInvoiceForTicket(Ticket ticket)
         {
-            if (ticket == null)
+            if (ticket==null)
             {
                 Console.WriteLine("Cannot generate invoice for null ticket");
                 return null;
@@ -178,27 +178,27 @@ namespace BusTicketBookingSystem
            
             if (_ticketToInvoice.ContainsKey(ticket.TicketId))
             {
-                string existingInvoiceId = _ticketToInvoice[ticket.TicketId];
+                string existingInvoiceId=_ticketToInvoice[ticket.TicketId];
                 Console.WriteLine($"Invoice already exists for ticket {ticket.TicketId}. Invoice ID: {existingInvoiceId}");
                 return _invoices[existingInvoiceId];
             }
 
           
-            string invoiceId = GenerateInvoiceId();
+            string invoiceId=GenerateInvoiceId();
 
           
-            Invoice newInvoice = new Invoice(invoiceId, ticket.TicketId, ticket.UserId, ticket.PricePaid);
+            Invoice newInvoice=new Invoice(invoiceId, ticket.TicketId, ticket.UserId, ticket.PricePaid);
 
            
-            _invoices[invoiceId] = newInvoice;
+            _invoices[invoiceId]=newInvoice;
 
             
-            _ticketToInvoice[ticket.TicketId] = invoiceId;
+            _ticketToInvoice[ticket.TicketId]=invoiceId;
 
           
             if (!_userInvoices.ContainsKey(ticket.UserId))
             {
-                _userInvoices[ticket.UserId] = new List<string>();
+                _userInvoices[ticket.UserId]=new List<string>();
             }
             _userInvoices[ticket.UserId].Add(invoiceId);
 
@@ -216,9 +216,9 @@ namespace BusTicketBookingSystem
         }
 
         // REQUIREMENT: Retrieve and view all generated invoices for a user
-        public List<Invoice> GetUserInvoices(string userId)
+        public List<Invoice>GetUserInvoices(string userId)
         {
-            List<Invoice> userInvoices = new List<Invoice>();
+            List<Invoice> userInvoices=new List<Invoice>();
             
             if (_userInvoices.ContainsKey(userId))
             {
@@ -235,10 +235,10 @@ namespace BusTicketBookingSystem
         }
 
         // REQUIREMENT: Get outstanding (unpaid) invoices
-        public List<Invoice> GetOutstandingInvoices(string userId)
+        public List<Invoice>GetOutstandingInvoices(string userId)
         {
-            List<Invoice> allUserInvoices = GetUserInvoices(userId);
-            return allUserInvoices.Where(i => i.Status != PaymentStatus.Paid).ToList();
+            List<Invoice>allUserInvoices=GetUserInvoices(userId);
+            return allUserInvoices.Where(i=>i.Status!=PaymentStatus.Paid).ToList();
         }
 
         // REQUIREMENT: Submit payment for any outstanding invoice
@@ -250,23 +250,23 @@ namespace BusTicketBookingSystem
                 return false;
             }
 
-            Invoice invoice = _invoices[invoiceId];
+            Invoice invoice=_invoices[invoiceId];
 
-            if (invoice.Status == PaymentStatus.Paid)
+            if (invoice.Status==PaymentStatus.Paid)
             {
                 Console.WriteLine($"Invoice {invoiceId} is already fully paid");
                 return false;
             }
 
-            if (amount <= 0)
+            if (amount<=0)
             {
                 Console.WriteLine("Payment amount must be greater than 0");
                 return false;
             }
 
-            decimal remainingAmount = invoice.AmountDue;
+            decimal remainingAmount=invoice.AmountDue;
 
-            if (amount >= remainingAmount)
+            if (amount>=remainingAmount)
             {
                 
                 invoice.MarkAsPaid();
@@ -293,7 +293,7 @@ namespace BusTicketBookingSystem
                 return false;
             }
 
-            Invoice invoice = _invoices[invoiceId];
+            Invoice invoice=_invoices[invoiceId];
             return MakePayment(invoiceId, invoice.AmountDue);
         }
 

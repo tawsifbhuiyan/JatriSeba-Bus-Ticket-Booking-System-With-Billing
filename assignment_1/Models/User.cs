@@ -20,7 +20,7 @@ namespace BusTicketBookingSystem
     {
         void AddBooking(string ticketId);
         bool CancelBooking(string ticketId);
-        IReadOnlyList<string> GetActiveBookings();
+        IReadOnlyList<string>GetActiveBookings();
         int TotalBookings { get; }
         int ActiveBookings { get; }
     }
@@ -33,11 +33,11 @@ namespace BusTicketBookingSystem
     }
 
     
-    /// ABSTRACTION use: Abstract base class hiding implementation details
+    /// ABSTRACTION use: Abstract base class implementation details hide kore
     
     public abstract class BaseUser : IUserData, IBookable, IUserDisplay
     {
-        // ENCAPSULATION: Private/protected fields hidden from outside
+        // ENCAPSULATION: Private/protected fields outside theke hidden taai Encapsulation
         protected string _userId;
         protected string _fullName;
         protected string _mobileNumber;
@@ -46,33 +46,33 @@ namespace BusTicketBookingSystem
 
         protected BaseUser(string fullName, string mobileNumber, string email)
         {
-            _userId = GenerateUserId();
-            _fullName = fullName;
-            _mobileNumber = mobileNumber;
-            _email = email;
-            _bookingRecords = new List<BookingRecord>(); 
+            _userId=GenerateUserId();
+            _fullName=fullName;
+            _mobileNumber=mobileNumber;
+            _email=email;
+            _bookingRecords=new List<BookingRecord>(); 
         }
 
-        // ABSTRACTION: Abstract method - derived classes must implement
+        // ABSTRACTION: Abstract method - derived classes der obosshoi implement korte hobe
         protected abstract string GenerateUserId();
 
-        // ENCAPSULATION: Public properties with validation logic
-        public string UserId => _userId;
+        // ENCAPSULATION: Public properties validation logic diye data integrity maintain kore
+        public string UserId=>_userId;
         
         public string FullName
         {
-            get => _fullName;
+            get=>_fullName;
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Full name cannot be empty");
-                _fullName = value;
+                _fullName=value;
             }
         }
         
         public string MobileNumber
         {
-            get => _mobileNumber;
+            get=>_mobileNumber;
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
@@ -85,24 +85,24 @@ namespace BusTicketBookingSystem
         
         public string Email
         {
-            get => _email;
+            get=>_email;
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Email cannot be empty");
                 if (!value.Contains("@") || !value.Contains("."))
                     throw new ArgumentException("Invalid email format");
-                _email = value;
+                _email=value;
             }
         }
 
         
-        public int TotalBookings => _bookingRecords.Count;
-        public int ActiveBookings => _bookingRecords.Count(b => !b.IsCancelled);
+        public int TotalBookings=>_bookingRecords.Count;
+        public int ActiveBookings=>_bookingRecords.Count(b=>!b.IsCancelled);
 
         
-        /// POLYMORPHISM: Virtual method - can be overridden by derived classes
-        /// SINGLE RESPONSIBILITY PRINCIPLE (SRP): This method only handles adding bookings
+        /// POLYMORPHISM: Virtual method - derived class diye override kora jabe
+        /// SINGLE RESPONSIBILITY PRINCIPLE (SRP): Shudhu booking add korar kaj kore, baki logic onno method e handle kora jabe
       
         public virtual void AddBooking(string ticketId)
         {
@@ -111,7 +111,7 @@ namespace BusTicketBookingSystem
                 throw new ArgumentException("Ticket ID cannot be empty");
             
            
-            if (_bookingRecords.Any(b => b.TicketId == ticketId && !b.IsCancelled))
+            if (_bookingRecords.Any(b =>b.TicketId==ticketId&&!b.IsCancelled))
                 throw new InvalidOperationException($"Ticket {ticketId} is already booked by this user");
             
            
@@ -120,39 +120,39 @@ namespace BusTicketBookingSystem
         }
 
        
-        /// POLYMORPHISM: Virtual method - can be overridden by derived classes
+        /// POLYMORPHISM: Virtual method - derived class diye override kora jabe
       
         public virtual bool CancelBooking(string ticketId)
         {
-            var booking = _bookingRecords.FirstOrDefault(b => b.TicketId == ticketId && !b.IsCancelled);
+            var booking=_bookingRecords.FirstOrDefault(b =>b.TicketId==ticketId && !b.IsCancelled);
             
-            if (booking == null)
+            if (booking==null)
                 return false;
             
-            booking.IsCancelled = true;
-            booking.CancelledDate = DateTime.Now;
+            booking.IsCancelled=true;
+            booking.CancelledDate=DateTime.Now;
             OnBookingCancelled(ticketId);
             return true;
         }
 
       
-        public IReadOnlyList<string> GetActiveBookings()
+        public IReadOnlyList<string>GetActiveBookings()
         {
             return _bookingRecords
-                .Where(b => !b.IsCancelled)
-                .Select(b => b.TicketId)
+                .Where(b =>!b.IsCancelled)
+                .Select(b =>b.TicketId)
                 .ToList()
                 .AsReadOnly();
         }
 
        
         
-        /// OPEN/CLOSED PRINCIPLE (OCP): Extension points without modifying base class
-               protected virtual void OnBookingAdded(string ticketId) { }
+        /// OPEN/CLOSED PRINCIPLE (OCP): Extension points modifying base class e change na kore virtual methods diye provide kora
+        protected virtual void OnBookingAdded(string ticketId) { }
         protected virtual void OnBookingCancelled(string ticketId) { }
 
        
-        /// POLYMORPHISM: Virtual method for display
+        /// POLYMORPHISM: Virtual method display er jonno
         
         public virtual void DisplayUserInfo()
         {
@@ -171,7 +171,7 @@ namespace BusTicketBookingSystem
         
         public virtual void DisplayAllBookings()
         {
-            if (_bookingRecords.Count == 0)
+            if (_bookingRecords.Count==0)
             {
                 Console.WriteLine("No bookings found for this user");
                 return;
@@ -185,18 +185,18 @@ namespace BusTicketBookingSystem
 
             foreach (var booking in _bookingRecords)
             {
-                string status = booking.IsCancelled ? "CANCELLED" : "ACTIVE";
+                string status=booking.IsCancelled ? "CANCELLED" : "ACTIVE";
                 
                 if (booking.IsCancelled)
-                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor=ConsoleColor.Red;
                 else
-                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.ForegroundColor=ConsoleColor.Green;
                     
                 Console.WriteLine($"  [{status}] Ticket: {booking.TicketId}");
                 Console.ResetColor();
                 Console.WriteLine($"          Booked: {booking.BookingDate:yyyy-MM-dd HH:mm}");
                 
-                if (booking.IsCancelled && booking.CancelledDate.HasValue)
+                if (booking.IsCancelled&&booking.CancelledDate.HasValue)
                 {
                     Console.WriteLine($"          Cancelled: {booking.CancelledDate.Value:yyyy-MM-dd HH:mm}");
                 }
@@ -211,8 +211,8 @@ namespace BusTicketBookingSystem
     }
 
     
-    /// INHERITANCE: RegularUser inherits from BaseUser
-    /// LISKOV SUBSTITUTION PRINCIPLE (LSP): Can replace BaseUser without breaking functionality
+    /// INHERITANCE: RegularUser BaseUser theke inherit kore
+    /// LISKOV SUBSTITUTION PRINCIPLE (LSP): BaseUser er jaygay RegularUser use kora jabe without breaking functionality
     
     public class RegularUser : BaseUser
     {
@@ -234,39 +234,39 @@ namespace BusTicketBookingSystem
     }
 
     
-    /// INHERITANCE: PremiumUser inherits from BaseUser
+    /// INHERITANCE: PremiumUser inherit kore BaseUser theke
     /// LISKOV SUBSTITUTION PRINCIPLE (LSP): Can replace BaseUser without breaking functionality
     /// OPEN/CLOSED PRINCIPLE (OCP): Extended behavior without modifying BaseUser
     
     public class PremiumUser : BaseUser
     {
-        private List<string> _discountCodes;
+        private List<string>_discountCodes;
         private int _loyaltyPoints;
 
         public PremiumUser(string fullName, string mobileNumber, string email) 
             : base(fullName, mobileNumber, email)
         {
-            _discountCodes = new List<string>();
-            _loyaltyPoints = 0;
+            _discountCodes=new List<string>();
+            _loyaltyPoints=0;
         }
 
-        public int LoyaltyPoints => _loyaltyPoints;
+        public int LoyaltyPoints=>_loyaltyPoints;
 
         protected override string GenerateUserId()
         {
             return $"PRM_{Guid.NewGuid().ToString().Substring(0, 8).ToUpper()}";
         }
 
-        // POLYMORPHISM: Overriding with premium-specific behavior
+        // POLYMORPHISM: premium_specific behavior diye override kora
         protected override void OnBookingAdded(string ticketId)
         {
-            _loyaltyPoints += 10;
+            _loyaltyPoints+=10;
             Console.WriteLine($" Premium user {FullName} earned 10 loyalty points! Total: {_loyaltyPoints}");
         }
 
         protected override void OnBookingCancelled(string ticketId)
         {
-            _loyaltyPoints -= 5;
+            _loyaltyPoints-=5;
             Console.WriteLine($" Premium user {FullName} lost 5 loyalty points. Total: {_loyaltyPoints}");
         }
 
@@ -276,9 +276,9 @@ namespace BusTicketBookingSystem
             Console.WriteLine($" Discount code {code} added for premium user");
         }
 
-        public IReadOnlyList<string> GetDiscountCodes() => _discountCodes.AsReadOnly();
+        public IReadOnlyList<string>GetDiscountCodes()=>_discountCodes.AsReadOnly();
 
-        // POLYMORPHISM: Overriding display with additional info
+        // POLYMORPHISM: Overridde kore base display method to include premium-specific info
         public override void DisplayUserInfo()
         {
             base.DisplayUserInfo();
@@ -288,8 +288,8 @@ namespace BusTicketBookingSystem
     }
 
    
-    /// ENCAPSULATION: Inner class to track individual booking details
-    /// SINGLE RESPONSIBILITY PRINCIPLE (SRP): Only responsible for booking record data
+    /// ENCAPSULATION: Inner class jaate booking record data handle kore, user class er bahire theke direct access na thake
+    /// SINGLE RESPONSIBILITY PRINCIPLE (SRP): Shudhu booking record er data rakhbe, baki logic user class e handle kora hobe
     
     public class BookingRecord
     {
@@ -300,15 +300,15 @@ namespace BusTicketBookingSystem
 
         public BookingRecord(string ticketId, DateTime bookingDate, bool isCancelled)
         {
-            TicketId = ticketId;
-            BookingDate = bookingDate;
-            IsCancelled = isCancelled;
-            CancelledDate = null;
+            TicketId=ticketId;
+            BookingDate=bookingDate;
+            IsCancelled=isCancelled;
+            CancelledDate=null;
         }
     }
 
    
-    /// DEPENDENCY INVERSION PRINCIPLE (DIP): Factory depends on abstraction (IUserFactory)
+    /// DEPENDENCY INVERSION PRINCIPLE (DIP): Factory depend kore abstraction (interface) er upor, na je concrete implementation er upor
    
     public interface IUserFactory
     {
@@ -321,7 +321,7 @@ namespace BusTicketBookingSystem
         {
             return userType.ToLower() switch
             {
-                "premium" => new PremiumUser(fullName, mobileNumber, email),
+                "premium"=> new PremiumUser(fullName, mobileNumber, email),
                 _ => new RegularUser(fullName, mobileNumber, email)
             };
         }

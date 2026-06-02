@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BusTicketBookingSystem
 {
-    // INTERFACE SEGREGATION PRINCIPLE (ISP) - Focused interface for ticket data
+    // INTERFACE SEGREGATION PRINCIPLE (ISP) - Focused interface ticket data er jonno
     public interface ITicketInfo
     {
         string TicketId { get; }
@@ -16,7 +16,7 @@ namespace BusTicketBookingSystem
         TicketStatus Status { get; }
     }
 
-    // INTERFACE SEGREGATION PRINCIPLE (ISP) - Focused interface for ticket operations
+    // INTERFACE SEGREGATION PRINCIPLE (ISP) - Focused interface ticket operations er jonno
     public interface ITicketOperations
     {
         void MarkAsCancelled();
@@ -32,7 +32,7 @@ namespace BusTicketBookingSystem
         Completed
     }
 
-    // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Only responsible for ticket data
+    // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Shudhu ticket data represent kore, booking logic alada service e
     // ENCAPSULATION - All fields are private with public properties
     public class Ticket : ITicketInfo, ITicketOperations
     {
@@ -46,81 +46,81 @@ namespace BusTicketBookingSystem
 
         public Ticket(string ticketId, string userId, string scheduleId, int seatNumber, decimal pricePaid)
         {
-            TicketId = ticketId;
-            UserId = userId;
-            ScheduleId = scheduleId;
-            SeatNumber = seatNumber;
-            PricePaid = pricePaid;
-            _bookingDate = DateTime.Now;
-            _status = TicketStatus.Booked;
+            TicketId=ticketId;
+            UserId=userId;
+            ScheduleId=scheduleId;
+            SeatNumber=seatNumber;
+            PricePaid=pricePaid;
+            _bookingDate=DateTime.Now;
+            _status=TicketStatus.Booked;
         }
 
         public string TicketId
         {
-            get => _ticketId;
+            get=>_ticketId;
             private set
             {
                 if (string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Ticket ID cannot be empty");
-                _ticketId = value;
+                _ticketId=value;
             }
         }
 
         public string UserId
         {
-            get => _userId;
+            get=>_userId;
             private set
             {
                 if (string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("User ID cannot be empty");
-                _userId = value;
+                _userId=value;
             }
         }
 
         public string ScheduleId
         {
-            get => _scheduleId;
+            get=>_scheduleId;
             private set
             {
-                if (string.IsNullOrWhiteSpace(value))
+                if(string.IsNullOrWhiteSpace(value))
                     throw new ArgumentException("Schedule ID cannot be empty");
-                _scheduleId = value;
+                _scheduleId=value;
             }
         }
 
         public int SeatNumber
         {
-            get => _seatNumber;
+            get=>_seatNumber;
             private set
             {
-                if (value <= 0)
+                if (value<=0)
                     throw new ArgumentException("Seat number must be positive");
-                _seatNumber = value;
+                _seatNumber=value;
             }
         }
 
         public decimal PricePaid
         {
-            get => _pricePaid;
+            get=>_pricePaid;
             private set
             {
-                if (value <= 0)
+                if (value<=0)
                     throw new ArgumentException("Price must be greater than 0");
                 _pricePaid = value;
             }
         }
 
         public DateTime BookingDate => _bookingDate;
-        public TicketStatus Status => _status;
+        public TicketStatus Status=>_status;
 
         public void MarkAsCancelled()
         {
-            _status = TicketStatus.Cancelled;
+            _status=TicketStatus.Cancelled;
         }
 
         public void MarkAsCompleted()
         {
-            _status = TicketStatus.Completed;
+            _status=TicketStatus.Completed;
         }
 
         public void DisplayTicketInfo()
@@ -147,60 +147,60 @@ namespace BusTicketBookingSystem
     // INTERFACE SEGREGATION PRINCIPLE (ISP) - Focused interface for booking service
     public interface ITicketBookingService
     {
-        List<BaseSchedule> GetAvailableSchedules();
+        List<BaseSchedule>GetAvailableSchedules();
         bool IsSeatAvailableForSchedule(string scheduleId, int seatNumber);
         Ticket BookTicket(string userId, string scheduleId, int seatNumber, decimal paymentAmount);
         bool CancelTicket(string ticketId);
         Ticket GetTicket(string ticketId);
-        List<Ticket> GetUserTickets(string userId);
+        List<Ticket>GetUserTickets(string userId);
     }
 
-    // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Only handles ticket booking process
+    // SINGLE RESPONSIBILITY PRINCIPLE (SRP) - Shudhu ticket booking logic handle kore, ticket data class alada
     // DEPENDENCY INVERSION PRINCIPLE (DIP) - Depends on abstractions (BaseSchedule, BaseUser)
     public class TicketBookingService : ITicketBookingService
     {
-        private Dictionary<string, Ticket> _tickets;
-        private Dictionary<string, List<string>> _userTickets;
-        private Dictionary<string, HashSet<int>> _scheduleReservedSeats;
-        private List<BaseSchedule> _schedules;
-        private List<BaseUser> _users;
+        private Dictionary<string, Ticket>_tickets;
+        private Dictionary<string, List<string>>_userTickets;
+        private Dictionary<string, HashSet<int>>_scheduleReservedSeats;
+        private List<BaseSchedule>_schedules;
+        private List<BaseUser>_users;
         private int _nextTicketNumber;
 
         public TicketBookingService(List<BaseSchedule> schedules, List<BaseUser> users)
         {
-            _tickets = new Dictionary<string, Ticket>();
-            _userTickets = new Dictionary<string, List<string>>();
-            _scheduleReservedSeats = new Dictionary<string, HashSet<int>>();
-            _schedules = schedules;
-            _users = users;
-            _nextTicketNumber = 1;
+            _tickets=new Dictionary<string, Ticket>();
+            _userTickets=new Dictionary<string, List<string>>();
+            _scheduleReservedSeats=new Dictionary<string, HashSet<int>>();
+            _schedules=schedules;
+            _users=users;
+            _nextTicketNumber=1;
 
             // Initialize reserved seats tracking for each schedule
             foreach (var schedule in _schedules)
             {
-                _scheduleReservedSeats[schedule.ScheduleId] = new HashSet<int>();
+                _scheduleReservedSeats[schedule.ScheduleId]=new HashSet<int>();
             }
         }
 
       
-        public List<BaseSchedule> GetAvailableSchedules()
+        public List<BaseSchedule>GetAvailableSchedules()
         {
-            return _schedules.Where(s => s.IsAvailable()).ToList();
+            return _schedules.Where(s=>s.IsAvailable()).ToList();
         }
 
         // REQUIREMENT: Validate seat against bus capacity
-        // REQUIREMENT: Prevent duplicate reservations for same schedule
+        // REQUIREMENT: Duplicate prevent kore, already reserved seat check
         public bool IsSeatAvailableForSchedule(string scheduleId, int seatNumber)
         {
            
-            var schedule = _schedules.FirstOrDefault(s => s.ScheduleId == scheduleId);
-            if (schedule == null)
+            var schedule=_schedules.FirstOrDefault(s => s.ScheduleId==scheduleId);
+            if (schedule==null)
             {
                 Console.WriteLine($"Schedule {scheduleId} not found");
                 return false;
             }
 
-            if (seatNumber < 1 || seatNumber > schedule.AssignedBus.TotalCapacity)
+            if (seatNumber<1||seatNumber>schedule.AssignedBus.TotalCapacity)
             {
                 Console.WriteLine($"Invalid seat number. Seat must be between 1 and {schedule.AssignedBus.TotalCapacity}");
                 return false;
@@ -229,16 +229,16 @@ namespace BusTicketBookingSystem
         public Ticket BookTicket(string userId, string scheduleId, int seatNumber, decimal paymentAmount)
         {
             
-            var user = _users.FirstOrDefault(u => u.UserId == userId);
-            if (user == null)
+            var user=_users.FirstOrDefault(u =>u.UserId==userId);
+            if (user==null)
             {
                 Console.WriteLine($"User {userId} not found");
                 return null;
             }
 
             
-            var schedule = _schedules.FirstOrDefault(s => s.ScheduleId == scheduleId);
-            if (schedule == null)
+            var schedule=_schedules.FirstOrDefault(s => s.ScheduleId==scheduleId);
+            if (schedule==null)
             {
                 Console.WriteLine($"Schedule {scheduleId} not found");
                 return null;
@@ -258,40 +258,40 @@ namespace BusTicketBookingSystem
             }
 
             
-            decimal finalPrice = schedule.GetDiscountedPrice(0);
+            decimal finalPrice=schedule.GetDiscountedPrice(0);
             
             
-            if (paymentAmount < finalPrice)
+            if (paymentAmount<finalPrice)
             {
                 Console.WriteLine($"Insufficient payment. Required: ${finalPrice}, Received: ${paymentAmount}");
                 return null;
             }
 
             
-            string ticketId = GenerateTicketId();
+            string ticketId=GenerateTicketId();
 
             
-            Ticket newTicket = new Ticket(ticketId, userId, scheduleId, seatNumber, finalPrice);
+            Ticket newTicket=new Ticket(ticketId, userId, scheduleId, seatNumber, finalPrice);
 
           
-            _tickets[ticketId] = newTicket;
+            _tickets[ticketId]=newTicket;
 
             
             if (!_userTickets.ContainsKey(userId))
             {
-                _userTickets[userId] = new List<string>();
+                _userTickets[userId]=new List<string>();
             }
             _userTickets[userId].Add(ticketId);
 
             
             if (!_scheduleReservedSeats.ContainsKey(scheduleId))
             {
-                _scheduleReservedSeats[scheduleId] = new HashSet<int>();
+                _scheduleReservedSeats[scheduleId]=new HashSet<int>();
             }
             _scheduleReservedSeats[scheduleId].Add(seatNumber);
 
            
-            bool seatReserved = schedule.AssignedBus.ReserveSeat(seatNumber);
+            bool seatReserved=schedule.AssignedBus.ReserveSeat(seatNumber);
             
             if (!seatReserved)
             {
@@ -317,17 +317,17 @@ namespace BusTicketBookingSystem
                 return false;
             }
 
-            Ticket ticket = _tickets[ticketId];
+            Ticket ticket=_tickets[ticketId];
             
-            if (ticket.Status == TicketStatus.Cancelled)
+            if (ticket.Status==TicketStatus.Cancelled)
             {
                 Console.WriteLine($"Ticket {ticketId} is already cancelled");
                 return false;
             }
 
           
-            var schedule = _schedules.FirstOrDefault(s => s.ScheduleId == ticket.ScheduleId);
-            if (schedule != null)
+            var schedule=_schedules.FirstOrDefault(s => s.ScheduleId == ticket.ScheduleId);
+            if (schedule!=null)
             {
                 
                 if (_scheduleReservedSeats.ContainsKey(ticket.ScheduleId))
@@ -353,9 +353,9 @@ namespace BusTicketBookingSystem
             return null;
         }
 
-        public List<Ticket> GetUserTickets(string userId)
+        public List<Ticket>GetUserTickets(string userId)
         {
-            List<Ticket> userTickets = new List<Ticket>();
+            List<Ticket> userTickets=new List<Ticket>();
             
             if (_userTickets.ContainsKey(userId))
             {
@@ -371,7 +371,7 @@ namespace BusTicketBookingSystem
             return userTickets;
         }
 
-        public HashSet<int> GetReservedSeatsForSchedule(string scheduleId)
+        public HashSet<int>GetReservedSeatsForSchedule(string scheduleId)
         {
             if (_scheduleReservedSeats.ContainsKey(scheduleId))
                 return _scheduleReservedSeats[scheduleId];
