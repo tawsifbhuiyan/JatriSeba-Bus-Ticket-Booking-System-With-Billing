@@ -33,7 +33,7 @@ namespace BusTicketBookingSystem
     }
 
     
-    /// ABSTRACTION: Abstract base class hiding implementation details
+    /// ABSTRACTION use: Abstract base class hiding implementation details
     
     public abstract class BaseUser : IUserData, IBookable, IUserDisplay
     {
