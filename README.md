@@ -62,7 +62,7 @@ This project is a comprehensive **Bus Ticket Booking & Billing System** develope
 ## 📁 Project Structure
 
 ```
-BusTicketBookingSystem/
+assignment_1/
 │
 ├── Program.cs                 # Main application entry point with all operations
 │
@@ -871,10 +871,10 @@ Main application entry point providing console-based user interface for all syst
 
 ```bash
 # Create new console project
-dotnet new console -n BusTicketBookingSystem
+dotnet new console -n assignment_1
 
 # Navigate to project directory
-cd BusTicketBookingSystem
+cd assignment_1
 ```
 
 #### Step 2: Add Class Files
@@ -882,7 +882,7 @@ cd BusTicketBookingSystem
 Create the following files in the project directory:
 
 ```
-BusTicketBookingSystem/
+assignment_1/
 ├── Program.cs
 ├── User.cs
 ├── Bus.cs
@@ -1014,7 +1014,7 @@ Follow this sequence to test all features:
 
 ## 👨‍💻 Author
 
-This project was completed as part of a C# Object-Oriented Programming assignment demonstrating mastery of OOP pillars and SOLID design principles.
+Ijbat Tahjib Bhuiyan
 
 ---
 
